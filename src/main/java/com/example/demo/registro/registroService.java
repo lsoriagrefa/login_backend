@@ -37,11 +37,6 @@ public class registroService {
 
 		datos = new HashMap<>();
 
-		if (!Registro.getContrasenia().equals(Registro.getConfirmarContrasenia())) {
-			datos.put("error", true);
-			datos.put("mensaje", "Las contraseñas no coinciden");
-			return new ResponseEntity<>(datos, HttpStatus.BAD_REQUEST);
-		}
 		Optional<registro> res = RegistroRepository.findRegistroByIdentificacion(Registro.getIdentificacion());
 		Optional<registro> res2 = RegistroRepository.findRegistroByUsuario(Registro.getUsuario());
 		
@@ -56,11 +51,10 @@ public class registroService {
 			return new ResponseEntity<>(datos, HttpStatus.BAD_REQUEST);
 		}
 		if (Registro.getUsuario() == null || Registro.getContrasenia() == null
-				|| Registro.getConfirmarContrasenia() == null || Registro.getNombre() == null
-				|| Registro.getApellido() == null || Registro.getIdentificacion() == null
-				|| Registro.getUsuario().isEmpty() || Registro.getContrasenia().isEmpty()
-				|| Registro.getNombre().isEmpty() || Registro.getApellido().isEmpty()
-				|| Registro.getIdentificacion().isEmpty()) {
+				|| Registro.getNombre() == null|| Registro.getApellido() == null
+				|| Registro.getIdentificacion() == null|| Registro.getUsuario().isEmpty()
+				|| Registro.getContrasenia().isEmpty()|| Registro.getNombre().isEmpty()
+				|| Registro.getApellido().isEmpty()|| Registro.getIdentificacion().isEmpty()){
 			datos.put("error", true);
 			datos.put("mensaje", "No se permiten campos nulos o vacíos");
 			return new ResponseEntity<>(datos, HttpStatus.BAD_REQUEST);
@@ -115,12 +109,6 @@ public class registroService {
 	@Transactional
 	public ResponseEntity<Object> actualizarRegistro(registro Registro) {
 	    datos = new HashMap<>();
-	    
-	    if (!Registro.getContrasenia().equals(Registro.getConfirmarContrasenia())) {
-			datos.put("error", true);
-			datos.put("mensaje", "Las contraseñas no coinciden");
-			return new ResponseEntity<>(datos, HttpStatus.BAD_REQUEST);
-		}
 	    
 	    RegistroRepository.updateRegistro(Registro.getIdentificacion(), Registro.getContrasenia(), Registro.getNombre(), Registro.getApellido());
 
