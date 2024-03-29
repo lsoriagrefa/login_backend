@@ -21,20 +21,11 @@ public class registro {
 	
 	private String contrasenia;
 	
-	private String confirmarContrasenia;
-	
 	private String nombre;
 	
 	@Column(unique=true)
 	private String identificacion;
 	
-	public String getConfirmarContrasenia() {
-		return confirmarContrasenia;
-	}
-
-	public void setConfirmarContrasenia(String confirmarContrasenia) {
-		this.confirmarContrasenia = confirmarContrasenia;
-	}
 
 	private String apellido;
 	
@@ -89,23 +80,20 @@ public class registro {
 	
 	public registro() {}
 
-	public registro(Integer id, String usuario, String contrasenia, String confirmarContrasenia, String nombre,
-			String apellido, String identificacion) {
+	public registro(Integer id, String usuario, String contrasenia, String nombre, String identificacion,
+			String apellido) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
 		this.contrasenia = contrasenia;
-		this.confirmarContrasenia = confirmarContrasenia;
 		this.nombre = nombre;
-		this.apellido = apellido;
 		this.identificacion = identificacion;
+		this.apellido = apellido;
 	}
 
 	@Override
 	public String toString() {
-		return "registro [id=" + id + ", usuario=" + usuario + ", contrasenia=" + contrasenia
-				+ ", confirmarContrasenia=" + confirmarContrasenia + ", nombre=" + nombre + ", apellido=" + apellido
-				+ ", identificacion=" + identificacion + "]";
+		return "registro [id=" + id + ", usuario=" + usuario + ", contrasenia=" + contrasenia + ", nombre=" + nombre
+				+ ", identificacion=" + identificacion + ", apellido=" + apellido + "]";
 	}
-	
 }
