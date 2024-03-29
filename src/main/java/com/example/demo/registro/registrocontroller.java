@@ -37,16 +37,14 @@ public class registrocontroller {
 		return this.RegistroService.newRegistro(Registro);
 	}
 
-    @PostMapping(path="/registro/identificacion")
-    public ResponseEntity<Object> obtenerUsuarioPorIdentificacion(@RequestBody Map<String, String> requestBody) {
-        String identificacion = requestBody.get("identificacion");
-        ResponseEntity<Object> response = RegistroService.obtenerUsuarioPorIdentificacion(identificacion);
-        return response;
+    @GetMapping(path="/registro/{Identificador}")
+    public ResponseEntity<Object> obtenerUsuarioPorIdentificacion(@PathVariable("Identificador") String Id) {
+    	return this.RegistroService.obtenerUsuarioPorIdentificacion(Id);
     }
     //actualizar
 	@PutMapping(path="/registro")
 	public ResponseEntity<Object> actualizarUsuario(@RequestBody registro Registro) {
-		return this.RegistroService.newRegistro(Registro);
+		return this.RegistroService.actualizarRegistro(Registro);
 	}
 	//eliminar
 	@DeleteMapping(path="/registro/{Identificador}")
