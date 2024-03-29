@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class registroService {
 
@@ -103,17 +105,32 @@ public class registroService {
 		datos.put("mensaje", "Se guardo correctamente");
 		return new ResponseEntity<>(datos, HttpStatus.CREATED);
 	}
+	
 
 	private boolean validarLetras(String cadena) {
 		// Expresión regular para verificar que la cadena contenga solo letras
 		String regex = "^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\\s]+$";
 		return Pattern.matches(regex, cadena);
 	}
+	@Transactional
+	public ResponseEntity<Object> actualizarRegistro(registro Registro) {
+	    datos = new HashMap<>();
+	    
+	    if (!Registro.getContrasenia().equals(Registro.getConfirmarContrasenia())) {
+			datos.put("error", true);
+			datos.put("mensaje", "Las contraseñas no coinciden");
+			return new ResponseEntity<>(datos, HttpStatus.BAD_REQUEST);
+		}
+	    
+	    RegistroRepository.updateRegistro(Registro.getIdentificacion(), Registro.getContrasenia(), Registro.getNombre(), Registro.getApellido());
 
+	    datos.put("mensaje", "Usuario actualizado correctamente");
+	    return ResponseEntity.ok().body(datos);
+	}
 
 	public ResponseEntity<Object> obtenerUsuarioPorIdentificacion(String identificacion) {
-		Optional<registro> res = RegistroRepository.findRegistroByIdentificacion(identificacion);
 		datos = new HashMap<>(); //aqui puse hashMap
+		Optional<registro> res = RegistroRepository.findRegistroByIdentificacion(identificacion);
 		if (!res.isPresent()) {
 			datos.put("error", true);
 			datos.put("mensaje", "No se encontró ningún usuario con la identificación proporcionada");
@@ -125,28 +142,26 @@ public class registroService {
 			return ResponseEntity.ok().body(datos);
 		}
 	}
-
-	public ResponseEntity<Object>deleteRegistro(String Id) {
-		datos = new HashMap<>();
-		Optional<registro> res=this.RegistroRepository.findRegistroByIdentificacion(Id);
-		if(!res.isPresent()) {
-			datos.put("error",true);
-			datos.put("mensaje", "No existe un usuario con ese identificador(CI/RUC/Pasaporte)");
-			return new ResponseEntity<>(
-					datos,
-					HttpStatus.ACCEPTED
-		    );
-		}
-		RegistroRepository.findRegistroByUsuario(Id);
-		datos.put("mensaje", "Usuario eliminado");
-		return new ResponseEntity<>(
-				datos,
-				HttpStatus.ACCEPTED
-				
-	    );
-	}
 	
-	public void dg() {
-		
+	@Transactional
+	public ResponseEntity<Object> deleteRegistro(String Id) {
+	    datos = new HashMap<>();
+	    Optional<registro> res = this.RegistroRepository.findRegistroByIdentificacion(Id);
+	    if (!res.isPresent()) {
+	        datos.put("error", true);
+	        datos.put("mensaje", "No existe un usuario con ese identificador (CI/RUC/Pasaporte)");
+	        return new ResponseEntity<>(
+	                datos,
+	                HttpStatus.ACCEPTED
+	        );
+	    } else {
+	        this.RegistroRepository.deleteByIdentificacion(Id); 
+	        datos.put("mensaje", "Usuario eliminado correctamente");
+	        return new ResponseEntity<>(
+	                datos,
+	                HttpStatus.ACCEPTED
+	        );
+	    }
 	}
+
 }
