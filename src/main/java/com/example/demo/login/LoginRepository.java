@@ -10,5 +10,5 @@ import com.example.demo.registro.registro;
 @Repository
 public interface LoginRepository extends JpaRepository<registro, Integer>{
 
-	Optional<registro>findRegistroByUsuarioAndContrasenia(String usuario, String contrasenia);
+	Optional<registro>findRegistroByUsuario(String usuario);
 }
