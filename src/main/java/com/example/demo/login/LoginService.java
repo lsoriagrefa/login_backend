@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.registro.registro;
+import com.example.demo.registro.Registro;
 
 @Service
 public class LoginService {
@@ -26,8 +26,8 @@ public class LoginService {
 		this.passwordEncoder = new BCryptPasswordEncoder();
 	}
 
-	public ResponseEntity<Object> Autentificacion(registro Registro) {
-		Optional<registro> res = loginRepository.findRegistroByUsuario(Registro.getUsuario());
+	public ResponseEntity<Object> Autentificacion(Registro registro) {
+		Optional<Registro> res = loginRepository.findRegistroByUsuario(registro.getUsuario());
 		datos = new HashMap<>();
 
 		if (!res.isPresent()) {
@@ -35,8 +35,8 @@ public class LoginService {
 			datos.put("mensaje", "Usuario incorrecto");
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(datos);
 		} else {
-			registro usuarioDB = res.get();
-			if (passwordEncoder.matches(Registro.getContrasenia(), usuarioDB.getContrasenia())) {
+			Registro usuarioDB = res.get();
+			if (passwordEncoder.matches(registro.getContrasenia(), usuarioDB.getContrasenia())) {
 				datos.put("error", false);
 				datos.put("mensaje", "Inicio de sesión exitoso");
 				return ResponseEntity.ok().body(datos);

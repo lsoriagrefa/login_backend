@@ -15,37 +15,37 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 @Service
-public class registroService {
+public class RegistroService {
 
 	HashMap<String, Object> datos;
 
-	private final registroRepository RegistroRepository;
+	private final RegistroRepository registroRepository;
 	
 	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public registroService(registroRepository RegistroRepository) {
-		this.RegistroRepository = RegistroRepository;
+	public RegistroService(RegistroRepository registroRepository) {
+		this.registroRepository = registroRepository;
 		this.passwordEncoder=new BCryptPasswordEncoder();
 	}
 
-	public List<registro> getRegistro() {
+	public List<Registro> getRegistro() {
 
-		return this.RegistroRepository.findAll();
+		return this.registroRepository.findAll();
 		/*
 		 * return List.of( new registro(1, "lsoria", "flores", "Lis", "Soria",
 		 * "0503695264") );
 		 */
 	}
 
-	public ResponseEntity<Object> newRegistro(registro Registro) {
+	public ResponseEntity<Object> newRegistro(Registro Registro) {
 
 		datos = new HashMap<>();
 		
 		String encoderPassword = this.passwordEncoder.encode(Registro.getContrasenia());
 
-		Optional<registro> res = RegistroRepository.findRegistroByIdentificacion(Registro.getIdentificacion());
-		Optional<registro> res2 = RegistroRepository.findRegistroByUsuario(Registro.getUsuario());
+		Optional<Registro> res = registroRepository.findRegistroByIdentificacion(Registro.getIdentificacion());
+		Optional<Registro> res2 = registroRepository.findRegistroByUsuario(Registro.getUsuario());
 		
 		if (res.isPresent()) {
 			datos.put("error", true);
@@ -103,7 +103,7 @@ public class registroService {
 		}
 		//crearNuevoRegistro
 		Registro.setContrasenia(encoderPassword);
-		RegistroRepository.save(Registro);
+		registroRepository.save(Registro);
 		datos.put("mensaje", "Se guardo correctamente");
 		return new ResponseEntity<>(datos, HttpStatus.OK);
 	}
@@ -115,10 +115,10 @@ public class registroService {
 		return Pattern.matches(regex, cadena);
 	}
 	@Transactional
-	public ResponseEntity<Object> actualizarRegistro(registro Registro) {
+	public ResponseEntity<Object> actualizarRegistro(Registro registro) {
 	    datos = new HashMap<>();
 	    
-	    RegistroRepository.updateRegistro(Registro.getIdentificacion(), Registro.getContrasenia(), Registro.getNombre(), Registro.getApellido());
+	    registroRepository.updateRegistro(registro.getIdentificacion(), registro.getContrasenia(), registro.getNombre(), registro.getApellido());
 
 	    datos.put("mensaje", "Usuario actualizado correctamente");
 	    return ResponseEntity.ok().body(datos);
@@ -126,7 +126,7 @@ public class registroService {
 
 	public ResponseEntity<Object> obtenerUsuarioPorIdentificacion(String identificacion) {
 		datos = new HashMap<>(); //aqui puse hashMap
-		Optional<registro> res = RegistroRepository.findRegistroByIdentificacion(identificacion);
+		Optional<Registro> res = registroRepository.findRegistroByIdentificacion(identificacion);
 		if (!res.isPresent()) {
 			datos.put("error", true);
 			datos.put("mensaje", "No se encontró ningún usuario con la identificación proporcionada");
@@ -142,7 +142,7 @@ public class registroService {
 	@Transactional
 	public ResponseEntity<Object> deleteRegistro(String Id) {
 	    datos = new HashMap<>();
-	    Optional<registro> res = this.RegistroRepository.findRegistroByIdentificacion(Id);
+	    Optional<Registro> res = this.registroRepository.findRegistroByIdentificacion(Id);
 	    if (!res.isPresent()) {
 	        datos.put("error", true);
 	        datos.put("mensaje", "No existe un usuario con ese identificador (CI/RUC/Pasaporte)");
@@ -151,7 +151,7 @@ public class registroService {
 	                HttpStatus.ACCEPTED
 	        );
 	    } else {
-	        this.RegistroRepository.deleteByIdentificacion(Id); 
+	        this.registroRepository.deleteByIdentificacion(Id); 
 	        datos.put("mensaje", "Usuario eliminado correctamente");
 	        return new ResponseEntity<>(
 	                datos,

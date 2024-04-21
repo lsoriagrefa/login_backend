@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.registro.registro;
+import com.example.demo.registro.Registro;
 
 @Repository
-public interface LoginRepository extends JpaRepository<registro, Integer>{
+public interface LoginRepository extends JpaRepository<Registro, Integer>{
 
-	Optional<registro>findRegistroByUsuario(String usuario);
+	Optional<Registro>findRegistroByUsuario(String usuario);
 }

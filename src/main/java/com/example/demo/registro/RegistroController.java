@@ -21,26 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping(path="api/v1")
-public class registrocontroller {
+public class RegistroController {
 	
-	private final registroService RegistroService;
+	private final RegistroService registroService;
 	
 	@Autowired private Environment variable;
 	@Autowired
-	public registrocontroller(registroService RegistroService) {
-		this.RegistroService=RegistroService;
+	public RegistroController(RegistroService registroService) {
+		this.registroService=registroService;
 	}
 	
 	@GetMapping(path="/registro")
-	public List<registro>getRegistro(){
-		return this.RegistroService.getRegistro();
+	public List<Registro>getRegistro(){
+		return this.registroService.getRegistro();
 	}
 	
 	@PostMapping(path="/registro")
-	public ResponseEntity<Object> registrarUsuario(@RequestHeader(value = "token") String tokenHeaders, @RequestBody registro Registro) {
+	public ResponseEntity<Object> registrarUsuario(@RequestHeader(value = "token") String tokenHeaders, @RequestBody Registro Registro) {
 		String token = variable.getProperty("miapp.apikey");
     	if(tokenHeaders.equals(token)) {
-    		return this.RegistroService.newRegistro(Registro);
+    		return this.registroService.newRegistro(Registro);
     	}else {
 			HashMap<String,Object> datos= new HashMap<String, Object>();
 			datos .put("error", false);
@@ -51,16 +51,16 @@ public class registrocontroller {
 
     @GetMapping(path="/registro/{Identificador}")
     public ResponseEntity<Object> obtenerUsuarioPorIdentificacion(@PathVariable("Identificador") String Id) {
-    	return this.RegistroService.obtenerUsuarioPorIdentificacion(Id);
+    	return this.registroService.obtenerUsuarioPorIdentificacion(Id);
     }
     //actualizar
 	@PutMapping(path="/registro")
-	public ResponseEntity<Object> actualizarUsuario(@RequestBody registro Registro) {
-		return this.RegistroService.actualizarRegistro(Registro);
+	public ResponseEntity<Object> actualizarUsuario(@RequestBody Registro Registro) {
+		return this.registroService.actualizarRegistro(Registro);
 	}
 	//eliminar
 	@DeleteMapping(path="/registro/{Identificador}")
 	public ResponseEntity<Object> eliminar(@PathVariable("Identificador") String Id) {
-		return this.RegistroService.deleteRegistro(Id);
+		return this.registroService.deleteRegistro(Id);
 	}
 }

@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table
-public class registro {
+public class Registro {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -78,9 +78,9 @@ public class registro {
 		this.identificacion = identificacion;
 	}
 	
-	public registro() {}
+	public Registro() {}
 
-	public registro(Integer id, String usuario, String contrasenia, String nombre, String identificacion,
+	public Registro(Integer id, String usuario, String contrasenia, String nombre, String identificacion,
 			String apellido) {
 		super();
 		this.id = id;
