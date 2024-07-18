@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,21 +13,20 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 @Service
-public class RegistroService {
+public class UsuarioService {
 
 	HashMap<String, Object> datos;
 
-	private final RegistroRepository registroRepository;
+	private final UsuarioRepository registroRepository;
 	
 	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	public RegistroService(RegistroRepository registroRepository) {
+	public UsuarioService(UsuarioRepository registroRepository) {
 		this.registroRepository = registroRepository;
 		this.passwordEncoder=new BCryptPasswordEncoder();
 	}
 
-	public List<Registro> getRegistro() {
+	public List<Usuario> getRegistro() {
 
 		return this.registroRepository.findAll();
 		/*
@@ -38,14 +35,14 @@ public class RegistroService {
 		 */
 	}
 
-	public ResponseEntity<Object> newRegistro(Registro Registro) {
+	public ResponseEntity<Object> newRegistro(Usuario Registro) {
 
 		datos = new HashMap<>();
 		
 		String encoderPassword = this.passwordEncoder.encode(Registro.getContrasenia());
 
-		Optional<Registro> res = registroRepository.findRegistroByIdentificacion(Registro.getIdentificacion());
-		Optional<Registro> res2 = registroRepository.findRegistroByUsuario(Registro.getUsuario());
+		Optional<Usuario> res = registroRepository.findRegistroByIdentificacion(Registro.getIdentificacion());
+		Optional<Usuario> res2 = registroRepository.findRegistroByUsuario(Registro.getUsuario());
 		
 		if (res.isPresent()) {
 			datos.put("error", true);
@@ -115,7 +112,7 @@ public class RegistroService {
 		return Pattern.matches(regex, cadena);
 	}
 	@Transactional
-	public ResponseEntity<Object> actualizarRegistro(Registro registro) {
+	public ResponseEntity<Object> actualizarRegistro(Usuario registro) {
 	    datos = new HashMap<>();
 	    
 	    registroRepository.updateRegistro(registro.getIdentificacion(), registro.getContrasenia(), registro.getNombre(), registro.getApellido());
@@ -126,7 +123,7 @@ public class RegistroService {
 
 	public ResponseEntity<Object> obtenerUsuarioPorIdentificacion(String identificacion) {
 		datos = new HashMap<>(); //aqui puse hashMap
-		Optional<Registro> res = registroRepository.findRegistroByIdentificacion(identificacion);
+		Optional<Usuario> res = registroRepository.findRegistroByIdentificacion(identificacion);
 		if (!res.isPresent()) {
 			datos.put("error", true);
 			datos.put("mensaje", "No se encontró ningún usuario con la identificación proporcionada");
@@ -142,7 +139,7 @@ public class RegistroService {
 	@Transactional
 	public ResponseEntity<Object> deleteRegistro(String Id) {
 	    datos = new HashMap<>();
-	    Optional<Registro> res = this.registroRepository.findRegistroByIdentificacion(Id);
+	    Optional<Usuario> res = this.registroRepository.findRegistroByIdentificacion(Id);
 	    if (!res.isPresent()) {
 	        datos.put("error", true);
 	        datos.put("mensaje", "No existe un usuario con ese identificador (CI/RUC/Pasaporte)");

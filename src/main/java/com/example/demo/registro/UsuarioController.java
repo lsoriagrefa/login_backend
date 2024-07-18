@@ -2,7 +2,6 @@ package com.example.demo.registro;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -21,23 +20,23 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping(path="api/v1")
-public class RegistroController {
+public class UsuarioController {
 	
-	private final RegistroService registroService;
+	private final UsuarioService registroService;
 	
 	@Autowired private Environment variable;
-	@Autowired
-	public RegistroController(RegistroService registroService) {
+	
+	public UsuarioController(UsuarioService registroService) {
 		this.registroService=registroService;
 	}
 	
 	@GetMapping(path="/registro")
-	public List<Registro>getRegistro(){
+	public List<Usuario>getRegistro(){
 		return this.registroService.getRegistro();
 	}
 	
 	@PostMapping(path="/registro")
-	public ResponseEntity<Object> registrarUsuario(@RequestHeader(value = "token") String tokenHeaders, @RequestBody Registro Registro) {
+	public ResponseEntity<Object> registrarUsuario(@RequestHeader(value = "token") String tokenHeaders, @RequestBody Usuario Registro) {
 		String token = variable.getProperty("miapp.apikey");
     	if(tokenHeaders.equals(token)) {
     		return this.registroService.newRegistro(Registro);
@@ -55,7 +54,7 @@ public class RegistroController {
     }
     //actualizar
 	@PutMapping(path="/registro")
-	public ResponseEntity<Object> actualizarUsuario(@RequestBody Registro Registro) {
+	public ResponseEntity<Object> actualizarUsuario(@RequestBody Usuario Registro) {
 		return this.registroService.actualizarRegistro(Registro);
 	}
 	//eliminar

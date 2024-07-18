@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface RegistroRepository extends JpaRepository<Registro, Integer> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 	
 	//@Query("SELECT * FROM registro p WHERE p.identificacion=?1")
-	Optional<Registro>findRegistroByIdentificacion(String identificacion);
+	Optional<Usuario>findRegistroByIdentificacion(String identificacion);
 
-	Optional<Registro>findRegistroByUsuario(String usuario);
+	Optional<Usuario>findRegistroByUsuario(String usuario);
 	//Buscarusuario
 	
     void deleteByIdentificacion(String identificacion);

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.registro.Registro;
+import com.example.demo.registro.Usuario;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -22,14 +22,14 @@ public class LoginController {
 	private final LoginService loginService;
 	
 	@Autowired private Environment variable;
-	@Autowired 
+
 	public LoginController(LoginService loginService) {
 		this.loginService=loginService;
 	}
 	
 	//@CrossOrigin(origins = "http://172.17.24.14:8080")
     @PostMapping(path="/login")
-    public ResponseEntity<Object> autenticarUsuario(@RequestHeader(value = "token") String tokenHeaders, @RequestBody Registro registro) {
+    public ResponseEntity<Object> autenticarUsuario(@RequestHeader(value = "token") String tokenHeaders, @RequestBody Usuario registro) {
     	String token = variable.getProperty("miapp.apikey");
     	if(tokenHeaders.equals(token)) {
     		return loginService.Autentificacion(registro);
